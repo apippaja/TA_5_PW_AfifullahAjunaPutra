@@ -233,7 +233,6 @@
             font-weight: 500;
         }
 
-        /* Scrollbar custom */
         .history-container::-webkit-scrollbar {
             width: 4px;
         }
@@ -281,7 +280,6 @@
             }
         }
 
-        /* Focus states for accessibility */
         button:focus {
             outline: none;
             box-shadow: 
@@ -289,7 +287,6 @@
                 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        /* Special styling for zero button */
         #zero {
             grid-column: span 2;
         }
@@ -349,27 +346,23 @@
     </div>
 
     <script>
-        // State kalkulator
         let currentOperand = '0';
         let expression = '';
         let memoryValue = 0;
         let history = [];
         let lastResult = null;
 
-        // Elemen DOM
         const currentOperandElement = document.getElementById('current-operand');
         const previousOperandElement = document.getElementById('previous-operand');
         const memoryIndicator = document.getElementById('memory-indicator');
         const errorMessage = document.getElementById('error-message');
         const historyList = document.getElementById('history-list');
 
-        // Fungsi untuk memperbarui tampilan
         function updateDisplay() {
             currentOperandElement.textContent = currentOperand;
             previousOperandElement.textContent = expression;
             memoryIndicator.textContent = `Memory: ${memoryValue}`;
             
-            // Hapus pesan error setelah 3 detik
             if (errorMessage.textContent) {
                 setTimeout(() => {
                     errorMessage.textContent = '';
@@ -377,7 +370,6 @@
             }
         }
 
-        // Fungsi untuk menambahkan angka
         function appendNumber(number) {
             if (currentOperand === '0' || lastResult !== null) {
                 currentOperand = number;
@@ -387,7 +379,6 @@
             }
         }
 
-        // Fungsi untuk menambahkan operator
         function appendOperator(op) {
             if (lastResult !== null) {
                 expression = lastResult + ' ' + op;
@@ -398,18 +389,18 @@
                     expression += ' ' + currentOperand + ' ' + op;
                     currentOperand = '';
                 } else if (expression !== '') {
-                    // Ganti operator terakhir
+                    
                     expression = expression.slice(0, -1) + op;
                 }
             }
         }
 
-        // Fungsi untuk menghitung ekspresi
+       
         function calculateExpression(expr) {
-            // Pisahkan ekspresi menjadi token
+     
             const tokens = expr.trim().split(' ');
             
-            // Proses perkalian dan pembagian terlebih dahulu
+          
             for (let i = 1; i < tokens.length; i += 2) {
                 if (tokens[i] === '×' || tokens[i] === '÷') {
                     const left = parseFloat(tokens[i-1]);
@@ -425,13 +416,12 @@
                         result = left / right;
                     }
                     
-                    // Ganti tiga token dengan hasil
+                
                     tokens.splice(i-1, 3, result.toString());
-                    i -= 2; // Kembali ke posisi sebelumnya
+                    i -= 2; 
                 }
             }
             
-            // Proses penjumlahan dan pengurangan
             let result = parseFloat(tokens[0]);
             for (let i = 1; i < tokens.length; i += 2) {
                 const operator = tokens[i];
@@ -447,7 +437,6 @@
             return result;
         }
 
-        // Fungsi untuk menghitung
         function calculate() {
             if (expression === '' || currentOperand === '') return;
             
@@ -456,7 +445,6 @@
             try {
                 const result = calculateExpression(fullExpression);
                 
-                // Tambahkan ke riwayat
                 addToHistory(`${fullExpression} = ${result}`);
                 
                 currentOperand = result.toString();
@@ -468,14 +456,12 @@
             }
         }
 
-        // Fungsi untuk menambahkan ke riwayat
         function addToHistory(calculation) {
             history.unshift(calculation);
             if (history.length > 5) {
                 history.pop();
             }
             
-            // Perbarui tampilan riwayat
             historyList.innerHTML = '';
             history.forEach(item => {
                 const li = document.createElement('li');
@@ -485,30 +471,25 @@
             });
         }
 
-        // Fungsi untuk menghapus
         function clear() {
             currentOperand = '0';
             expression = '';
             lastResult = null;
         }
 
-        // Fungsi untuk menghapus entri
         function clearEntry() {
             currentOperand = '0';
         }
 
-        // Fungsi untuk menghapus memori
         function memoryClear() {
             memoryValue = 0;
         }
 
-        // Fungsi untuk memanggil memori
         function memoryRecall() {
             currentOperand = memoryValue.toString();
             lastResult = null;
         }
 
-        // Fungsi untuk menambah ke memori
         function memoryAdd() {
             const current = parseFloat(currentOperand);
             if (!isNaN(current)) {
@@ -516,15 +497,13 @@
             }
         }
 
-        // Fungsi untuk mengurangi dari memori
         function memorySubtract() {
             const current = parseFloat(currentOperand);
             if (!isNaN(current)) {
                 memoryValue -= current;
             }
         }
-
-        // Event listener untuk tombol angka
+        
         document.querySelectorAll('.number').forEach(button => {
             button.addEventListener('click', () => {
                 appendNumber(button.textContent);
@@ -532,33 +511,28 @@
             });
         });
 
-        // Event listener untuk tombol operator
         document.querySelectorAll('.operator').forEach(button => {
             button.addEventListener('click', () => {
                 appendOperator(button.textContent);
                 updateDisplay();
             });
         });
-
-        // Event listener untuk tombol sama dengan
+        
         document.getElementById('equals').addEventListener('click', () => {
             calculate();
             updateDisplay();
         });
 
-        // Event listener untuk tombol clear
         document.getElementById('clear').addEventListener('click', () => {
             clear();
             updateDisplay();
         });
 
-        // Event listener untuk tombol clear entry
         document.getElementById('clear-entry').addEventListener('click', () => {
             clearEntry();
             updateDisplay();
         });
 
-        // Event listener untuk tombol desimal
         document.getElementById('decimal').addEventListener('click', () => {
             if (!currentOperand.includes('.')) {
                 currentOperand += currentOperand === '' ? '0.' : '.';
@@ -566,7 +540,6 @@
             updateDisplay();
         });
 
-        // Event listener untuk tombol memori
         document.getElementById('mc').addEventListener('click', () => {
             memoryClear();
             updateDisplay();
@@ -586,8 +559,7 @@
             memorySubtract();
             updateDisplay();
         });
-
-        // Dukungan keyboard
+        
         document.addEventListener('keydown', event => {
             if (event.key >= '0' && event.key <= '9') {
                 appendNumber(event.key);
@@ -620,8 +592,8 @@
             }
         });
 
-        // Inisialisasi tampilan
         updateDisplay();
     </script>
 </body>
+
 </html>
